@@ -33,8 +33,97 @@
   --color-light: var(--light);
 }
 
-body {
-  background: var(--dark);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .headline1 {
+    font-family: 'Montserrat';
+    font-weight: '800';
+    font-size: 80px;
+    line-height: 100%;
+    letter-spacing: -1%;
+  }
+
+  .headline2 {
+    font-family: 'Montserrat';
+    font-weight: '700';
+    font-size: 40px;
+    line-height: 100%;
+    letter-spacing: 1%;
+  }
+
+  .headline3 {
+    font-family: 'Montserrat';
+    font-weight: '700';
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: -1%;
+  }
+
+  .paragraph1 {
+    font-family: 'Roboto';
+    font-weight: '500';
+    font-size: 21px;
+    line-height: 140%;
+    letter-spacing: 1%;
+  }
+
+  .paragraph2 {
+    font-family: 'Roboto';
+    font-weight: '400';
+    font-size: 16px;
+    line-height: 140%;
+    letter-spacing: 1%;
+  }
+
+  .subtitle {
+    font-family: 'Montserrat';
+    font-weight: '600';
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: 2%;
+  }
+
+  .tagline {
+    font-family: 'Roboto';
+    font-weight: '500';
+    font-size: 18px;
+    line-height: 100%;
+  }
+
+  .buttonText {
+    font-family: 'Roboto';
+    font-weight: '500';
+    font-size: 14px;
+    line-height: 100%;
+  }
+
+  .smallText {
+    font-family: 'Roboto';
+    font-weight: '500';
+    font-size: 12px;
+    line-height: 120%;
+    letter-spacing: 1%;
+  }
+
+  .linkText {
+    font-family: 'Roboto';
+    font-weight: '500';
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 1%;
+    text-decoration: underline;
+  }
+
+  /* @screen md {
+    .headline1 {
+      font-weight: 900;
+      font-size: 80px;
+    }
+  }
+
+  @screen lg {
+    .headline1 {
+      font-weight: 900;
+      font-size: 80px;
+    }
+  } */
 }
