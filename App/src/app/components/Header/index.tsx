@@ -1,8 +1,11 @@
 import Link from "next/link"
 import Logo from "../Logo"
+import LoginButton from "../LoginButton"
+import { auth } from "@/lib/auth"
 
-function Header() {
-    return (<header>
+async function Header() {
+    const session = await auth()
+    return (<header className="flex justify-between">
         <Logo full={true} />
         <nav>
             <Link href='/' >
@@ -10,8 +13,14 @@ function Header() {
                     Home
                 </p>
             </Link>
-            <Link href='/search' />
+            {Boolean(session) && (
+                <Link href={`/profile/${session?.user.id}`} >profile</Link>
+            )}
         </nav>
+        <div>
+            {session?.user?.name}
+            <LoginButton isSession={Boolean(session)} />
+        </div>
     </header>)
 }
 
