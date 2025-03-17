@@ -13,7 +13,5 @@ export default async function Profile(params) {
 
     return <>
         Hi {session?.user?.name}, this is your profile page
-
-
     </>
 }
