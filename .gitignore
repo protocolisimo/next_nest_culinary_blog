@@ -51,6 +51,9 @@ App/.next/
 node_modules/
 jspm_packages/
 
+App/.env
+Server/.env
+
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
