@@ -1,12 +1,33 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { DocumentNode, gql } from '@apollo/client';
 
-// const createApolloClient = () => {
-//     return new ApolloClient({
-//         uri: "https://countries.trevorblades.com",
-//         cache: new InMemoryCache(),
-//     });
-// };
+export type Recipe = {
+    id: string;
+    title: string;
+    description: string;
+    ingredients: string[];
+};
 
+export const GET_ALL_RECIPES = gql`
+  query GetRecipes {
+    recipes {
+      id
+      title
+      description
+      ingredients
+    }
+  }
+`;
+
+export const GET_RECIPE = gql`
+  query GetRecipe($id: ID!) {
+    recipe(id: $id) {
+      id
+      title
+      description
+      ingredients
+    }
+  }
+`;
 
 const mockData = {
     recipes: [
@@ -25,9 +46,16 @@ const mockData = {
     ],
 };
 
-
-const createApolloClient = () => {
-    query: async () => ({ data: mockData })
-}
-
-export default createApolloClient;
+// ✅ Mock Apollo Client function
+export const client = {
+    query: async ({ query, variables }: { query: DocumentNode, variables?: { id: string } }) => {
+        if (query === GET_ALL_RECIPES) {
+            return { data: { recipes: mockData.recipes } };
+        }
+        if (query === GET_RECIPE) {
+            const recipe = mockData.recipes.find((r) => r.id === variables?.id);
+            return { data: { recipe } };
+        }
+        return { data: null };
+    },
+};

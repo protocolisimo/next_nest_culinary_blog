@@ -14,7 +14,8 @@ async function Header() {
                 </p>
             </Link>
             {Boolean(session) && (
-                <Link href={`/profile/${session?.user.id}`} >profile</Link>
+                // @ts-expect-error (default session type does not have id field)
+                <Link href={`/profile/${session?.user?.id}`} >profile</Link>
             )}
         </nav>
         <div>

@@ -5,11 +5,11 @@
 
 import { auth } from "@/lib/auth"
 
-export default async function Profile(params) {
+export default async function Profile() {
     // console.log(params)
     // const user = await fetchUserByUsername(params.username);
 
-    let session = await auth()
+    const session = await auth()
 
     return <>
         Hi {session?.user?.name}, this is your profile page
