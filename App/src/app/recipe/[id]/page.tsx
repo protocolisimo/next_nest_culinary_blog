@@ -1,4 +1,5 @@
 import { GET_ALL_RECIPES, GET_RECIPE, Recipe, client } from "@/lib/apollo-client";
+import Link from "next/link";
 
 export async function generateStaticParams() {
   const { data } = await client.query({ query: GET_ALL_RECIPES });
@@ -30,7 +31,11 @@ export default async function RecipePage({ params }: { params: any }) {
       <p key={`${ingredient}--${i}`}>
         {ingredient}
       </p>
-
     ))}
+
+
+    <Link href={`/profile/${data?.recipe?.author.id}`}>
+      {data?.recipe?.author.id}
+    </Link>
   </>;
 }
