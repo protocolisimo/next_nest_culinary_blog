@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.4",
     "@tailwindcss/vite": "^4.0.14",
+    "graphql": "^16.10.0",
     "i": "^0.3.7",
     "jsonwebtoken": "^9.0.2",
     "next": "15.2.1",
