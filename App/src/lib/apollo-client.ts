@@ -1,11 +1,11 @@
-import { DocumentNode, gql } from '@apollo/client';
+import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type Recipe = {
     id: string;
     title: string;
     description: string;
     ingredients: string[];
-    author: { id: number }
+    author: { id: string }
 };
 
 export type User = {
@@ -24,7 +24,7 @@ export const GET_ALL_RECIPES = gql`
       author {id}
     }
   }
-`;
+` as TypedDocumentNode<Recipe[]>;
 
 export const GET_RECIPE = gql`
   query GetRecipe($id: ID!) {
@@ -36,7 +36,7 @@ export const GET_RECIPE = gql`
       author {id}
     }
   }
-`;
+` as TypedDocumentNode<Recipe>;
 
 export const GET_ALL_USERS = gql`
   query GetUsers {
@@ -46,7 +46,7 @@ export const GET_ALL_USERS = gql`
       posts
     }
   }
-`;
+`as TypedDocumentNode<User[]>;
 
 export const GET_USER = gql`
   query GetUser($id: ID!) {
@@ -56,9 +56,9 @@ export const GET_USER = gql`
       posts
     }
   }
-`;
+`as TypedDocumentNode<User>;
 
-export const GET_POSTS_BY_USER: DocumentNode = gql`
+export const GET_POSTS_BY_USER = gql`
   query GetPostsByUser($authorId: ID!) {
     postsByUser(authorId: $authorId) {
       id
@@ -70,7 +70,7 @@ export const GET_POSTS_BY_USER: DocumentNode = gql`
       }
     }
   }
-`;
+` as TypedDocumentNode<Recipe[]>;
 
 const mockRecipes = [
     {
@@ -125,26 +125,50 @@ const mockUsers = [
     }
 ]
 
+type QueryMapType = {
+    getAllUsers: { query: User[] };
+    getUser: { query: User, variables: { id: string } };
+    getAllRecipes: { query: Recipe[] };
+    getRecipe: { query: Recipe, variables: { id: string } };
+    getPostsByUser: { query: Recipe[], variables: { id: string } };
+};
+
+type QueryType<T extends keyof QueryMapType> = {
+    type: T,
+    // query: QueryMapType[T]['query'],
+    variables?: { id: string }
+}
+
+type ReturnQueryType<T extends keyof QueryMapType> = Promise<QueryMapType[T]['query']>
+const DEFAULT_RECIPE = {
+    id: 'default',
+    title: 'default',
+    description: 'default',
+    ingredients: ['default'],
+    author: { id: '000000000' }
+}
+
+const DEFAULT_USER = {
+    id: '000000000',
+    name: 'default',
+}
 
 export const client = {
-    query: async ({ query, variables }: { query: DocumentNode, variables?: { id: string } }) => {
-        if (query === GET_ALL_USERS) {
-            return { data: { users: mockUsers } };
+    query: async <T extends keyof QueryMapType>({ type, variables }: QueryType<T>): ReturnQueryType<T> => {
+        // console.log(query)
+        switch (type) {
+            case 'getAllRecipes':
+                return mockRecipes
+            case 'getRecipe':
+                return mockRecipes.find((r) => r.id === variables?.id) || DEFAULT_RECIPE;
+            case 'getAllUsers':
+                return mockUsers
+            case 'getUser':
+                return mockUsers.find((r) => r.id === variables?.id) || DEFAULT_USER
+            case 'getPostsByUser':
+                return mockRecipes.filter((p) => p.author.id === variables?.id);
+            default:
+                throw new Error('Query not found');
         }
-        if (query === GET_USER) {
-            const user = mockUsers.find((r) => r.id === variables?.id);
-            return { data: { user } };
-        }
-        if (query === GET_ALL_RECIPES) {
-            return { data: { recipes: mockRecipes } };
-        }
-        if (query === GET_RECIPE) {
-            const recipe = mockRecipes.find((r) => r.id === variables?.id);
-            return { data: { recipe } };
-        }
-        if (query === GET_POSTS_BY_USER) {
-            return { data: mockRecipes.filter((p) => p.author.id === variables?.id) };
-        }
-        return { data: null };
     },
 };
