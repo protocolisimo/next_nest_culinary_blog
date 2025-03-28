@@ -5,10 +5,10 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getHello(@Query('token') token): string {
-    return this.appService.getHello(token);
-  }
+  // @Get()
+  // getHello(@Query('id') id) {
+  //   // return this.appService.getHello();
+  // }
 
   @Get('/posts')
   getPosts(): any[] {
