@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaService } from './app.repositorie';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     AppController
   ],
   providers: [
+    PrismaService,
     AppResolver,
     AppService
   ],

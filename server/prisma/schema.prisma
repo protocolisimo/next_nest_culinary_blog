@@ -9,15 +9,15 @@ generator client {
 
 model User {
   id    String @id
-  name  String?
+  name  String
   recipes Recipe[]
 }
 
 model Recipe {
   id        String      @id
   title     String
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
+  description String
+  ingredients String
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
 }
-
-// не працює

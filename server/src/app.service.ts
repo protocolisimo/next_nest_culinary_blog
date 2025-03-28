@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RecipeDTO, UserDTO } from './app.resolver';
+import { PrismaService } from './app.repositorie';
+import { Prisma } from '@prisma/client';
 
 
 const MOCK_RECIPES = [
@@ -30,14 +32,61 @@ const MOCK_RECIPES = [
 
 @Injectable()
 export class AppService {
+  constructor(private prisma: PrismaService) { }
 
-  getUser(id: string): UserDTO {
-    console.log(MOCK_RECIPES.filter(recipe => recipe.authorId === id))
+  async getUser(
+    id: string,
+  ): Promise<UserDTO | null> {
+    const res = await this.prisma.user.findFirst({
+      where: { id },
+      include: {
+        recipes: true,
+      }
+    })
+
+    if (!res) {
+      throw new Error('no user was found')
+    }
+
     return {
-      id: "106517963766158279134",
-      name: "Kyrylo",
-      recipes: MOCK_RECIPES.filter(recipe => recipe.authorId === id)
-    };
+      ...res,
+      recipes: res?.recipes.map((recipe) => ({
+        ...recipe, ingredients: recipe.ingredients.split(',')
+      }))
+    }
+  }
+
+  async createUser(data: Prisma.UserCreateInput): Promise<UserDTO> {
+    return this.prisma.user.create({
+      data,
+    });
+  }
+
+  async updateUser(params: {
+    id: string,
+    data: { name?: string }
+  }): Promise<UserDTO> {
+    return this.prisma.user.update({
+      data: params.data,
+      where: { id: params.id },
+    });
+  }
+
+  async createRecipe({ data }: { data: RecipeDTO }): Promise<RecipeDTO> {
+    const res = await this.prisma.recipe.create({
+      data: {
+        id: data.id,
+
+        title: data.title,
+
+        description: data.description,
+
+        ingredients: data.ingredients.join(','),
+
+        authorId: data.authorId,
+      }
+    })
+    return { ...res, ingredients: res.ingredients.split(',') }
   }
 
   getRecipe(): RecipeDTO {
